@@ -31,7 +31,7 @@ public class Libro {
     private String autor;
 
     @OneToMany(mappedBy = "isbn")
-    private Set<Ejemplar> ejemplars = new LinkedHashSet<>();
+    private Set<Ejemplar> ejemplares = new LinkedHashSet<>();
 
     //Getters y setters
 
