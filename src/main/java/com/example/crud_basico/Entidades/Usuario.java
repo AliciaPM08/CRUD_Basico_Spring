@@ -92,9 +92,11 @@ public class Usuario {
     public void setTipo(@NotNull TipoUsuario tipo) {
         this.tipo = tipo;
     }
+
+    //Tipo enum para estableccer el tipo del Usuario
+    public enum TipoUsuario {
+        normal, administardor;
+    }
 }
 
-//Tipo enum para estableccer el tipo del Usuario
-enum TipoUsuario {
-    NORMAL, ADMINISTRADOR;
-}
+

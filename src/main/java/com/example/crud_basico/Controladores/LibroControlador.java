@@ -17,9 +17,6 @@ import java.util.List;
 public class LibroControlador {
     LibroRepositorio repositorioLibros;
 
-    public LibroControlador(){
-    }
-
     @Autowired
     public LibroControlador(LibroRepositorio repositorioLibros){
         this.repositorioLibros = repositorioLibros;

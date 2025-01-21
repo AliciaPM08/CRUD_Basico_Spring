@@ -2,6 +2,8 @@ package com.example.crud_basico.Controladores;
 
 import com.example.crud_basico.Entidades.Prestamo;
 import com.example.crud_basico.Repositorios.PrestamoRepositorio;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,42 +14,46 @@ import java.util.List;
 public class PrestamosControlador {
     private final PrestamoRepositorio prestamoRepositorio;
 
+    @Autowired
     public PrestamosControlador(PrestamoRepositorio prestamoRepository) {
         this.prestamoRepositorio = prestamoRepository;
     }
 
+    // GET --> SELECT *
     @GetMapping
-    public List<Prestamo> getAllPrestamos() {
-        return prestamoRepositorio.findAll();
+    public ResponseEntity<List<Prestamo>> getPrestamos() {
+        List<Prestamo> lista = prestamoRepositorio.findAll();
+        System.out.println(lista);
+        return ResponseEntity.ok(lista);
     }
 
-    @PostMapping
-    public Prestamo createPrestamo(@RequestBody Prestamo prestamo) {
-        return prestamoRepositorio.save(prestamo);
-    }
-
+    // GET BY ID --> SELECT BY ID
     @GetMapping("/{id}")
     public ResponseEntity<Prestamo> getPrestamoById(@PathVariable Integer id) {
-        return prestamoRepositorio.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        Prestamo p= this.prestamoRepositorio.findById(id).get();
+        return ResponseEntity.ok(p);
     }
 
+    // POST --> INSERT
+    @PostMapping
+    public ResponseEntity<Prestamo> addPrestamo(@Valid @RequestBody Prestamo prestamo) {
+        Prestamo prestamoPersistido = this.prestamoRepositorio.save(prestamo);
+        return ResponseEntity.ok().body(prestamoPersistido);
+    }
+
+    // PUT --> UPDATE
     @PutMapping("/{id}")
-    public ResponseEntity<Prestamo> updatePrestamo(@PathVariable Integer id, @RequestBody Prestamo prestamoDetails) {
-        return prestamoRepositorio.findById(id).map(prestamo -> {
-            prestamo.setUsuario(prestamoDetails.getUsuario());
-            prestamo.setEjemplar(prestamoDetails.getEjemplar());
-            prestamo.setFechaInicio(prestamoDetails.getFechaInicio());
-            prestamo.setFechaDevolucion(prestamoDetails.getFechaDevolucion());
-            return ResponseEntity.ok(prestamoRepositorio.save(prestamo));
-        }).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Prestamo> updatePrestamo(@Valid @RequestBody Prestamo prestamo, @PathVariable Integer id) {
+        Prestamo prestamOPersistido= prestamoRepositorio.save(prestamo);
+        return ResponseEntity.ok().body(prestamOPersistido);
     }
 
+    // DELETE
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePrestamo(@PathVariable Integer id) {
-        if (prestamoRepositorio.existsById(id)) {
-            prestamoRepositorio.deleteById(id);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<String> deletePrestamo(@PathVariable Integer id) {
+        prestamoRepositorio.deleteById(id);
+        return ResponseEntity.ok().body("Prestamo eliminado");
     }
+
+
 }

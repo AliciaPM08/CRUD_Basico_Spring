@@ -45,8 +45,8 @@ public class Ejemplar {
     public void setIsbn(@NotNull Libro isbn) {
         this.isbn = isbn;
     }
-}
 
-enum EstadoEjemplar {
-    DISPONIBLE, DAÑADO;
+    public enum EstadoEjemplar{
+        DISPONIBLE, DAÑADO;
+    }
 }
