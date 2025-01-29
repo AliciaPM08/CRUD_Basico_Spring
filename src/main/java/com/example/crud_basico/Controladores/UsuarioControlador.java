@@ -1,7 +1,6 @@
 package com.example.crud_basico.Controladores;
 
 import com.example.crud_basico.Entidades.Usuario;
-
 import com.example.crud_basico.Repositorios.UsuarioRepositorio;
 
 import jakarta.validation.Valid;
@@ -11,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.List;
 
 
@@ -20,14 +20,15 @@ public class UsuarioControlador {
     UsuarioRepositorio usuarioRepositorio;
 
     @Autowired
-    public UsuarioControlador(UsuarioRepositorio usuarioRepository) {
-        this.usuarioRepositorio = usuarioRepository;
+    public UsuarioControlador(UsuarioRepositorio usuarioRepositorio) {
+        this.usuarioRepositorio = usuarioRepositorio;
     }
 
     //GET --> SELECT *
     @GetMapping
     public ResponseEntity<List<Usuario>> getUsuarios() {
-        List<Usuario> lista = this.usuarioRepositorio.findAll();
+        //List<Usuario> lista = this.usuarioRepositorio.findAll();
+        List<Usuario> lista= this.usuarioRepositorio.findAll();
         System.out.println(lista);
         return ResponseEntity.ok(lista);
     }
@@ -49,21 +50,22 @@ public class UsuarioControlador {
 
     //POST con Form normal, se trabajará con JSONs normalmente...
     @PostMapping(value = "/usuarioForm", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Usuario> addUsuarioForm(@RequestParam String dni,
+    public ResponseEntity<Usuario> addUsuarioForm(@Valid @RequestParam String dni,
                                                   @RequestParam String nombre,
                                                   @RequestParam String email,
                                                   @RequestParam String password,
-                                                  @RequestParam String tipo) {
+                                                  @RequestParam String tipo,
+                                                  @RequestParam Date penalizacion_hasta) {
 
-            //Convertir String a TipoUsuario (enum)
-            Usuario.TipoUsuario tipoUsuario = Usuario.TipoUsuario.valueOf(tipo.toUpperCase());
+
 
             Usuario usuario = new Usuario();
             usuario.setDni(dni);
             usuario.setNombre(nombre);
             usuario.setEmail(email);
             usuario.setPassword(password);
-            usuario.setTipo(tipoUsuario);
+            usuario.setTipo(Usuario.TipoUsuario.valueOf(tipo));
+            usuario.setPenalizacion_hasta(penalizacion_hasta);
 
             this.usuarioRepositorio.save(usuario);
             return ResponseEntity.created(null).body(usuario);
@@ -71,7 +73,7 @@ public class UsuarioControlador {
 
     //PUT --> UPDATE
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> updateUsuario(@RequestBody Usuario usuario, @PathVariable Integer id) {
+    public ResponseEntity<Usuario> updateUsuario(@Valid @RequestBody Usuario usuario, @PathVariable Integer id) {
         Usuario usuarioPersistido = usuarioRepositorio.save(usuario);
         return ResponseEntity.ok().body(usuarioPersistido);
     }

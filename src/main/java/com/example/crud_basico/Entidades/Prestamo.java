@@ -2,20 +2,21 @@ package com.example.crud_basico.Entidades;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.sql.Date;
 
-import java.util.Date;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "prestamo")
 public class Prestamo {
-    //Variables
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -33,35 +34,31 @@ public class Prestamo {
     @JoinColumn(name = "ejemplar_id", nullable = false)
     private Ejemplar ejemplar;
 
-    @NotNull
-    @Column(name = "fechaInicio", nullable = false)
-    private Date fechaInicio;
+    @Column (name = "fecha_inicio", nullable = false)
+    private Date fecha_inicio;
 
-    @Column(name = "fechaDevolucion")
-    private Date fechaDevolucion;
+    @Column (name = "fecha_devolucion")
+    private Date fecha_devolucion;
 
-    //Getters y setters
-    public @NotNull Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(@NotNull Usuario usuario) {
+    public Prestamo(Integer id, Usuario usuario, Ejemplar ejemplar, Date fecha_inicio, Date fecha_devolucion) {
+        this.id = id;
         this.usuario = usuario;
-    }
-
-    public @NotNull Ejemplar getEjemplar() {
-        return ejemplar;
-    }
-
-    public void setEjemplar(@NotNull Ejemplar ejemplar) {
         this.ejemplar = ejemplar;
+        this.fecha_inicio = fecha_inicio;
+        this.fecha_devolucion = fecha_devolucion;
     }
 
-    public @NotNull Date getFechaInicio() {
-        return fechaInicio;
+    public Prestamo() {
     }
 
-    public void setFechaInicio(@NotNull Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
+    @Override
+    public String toString() {
+        return "Prestamo{" +
+                "id=" + id +
+                ", usuario=" + usuario +
+                ", ejemplar=" + ejemplar +
+                ", fecha_inicio=" + fecha_inicio +
+                ", fecha_devolucion=" + fecha_devolucion +
+                '}';
     }
 }

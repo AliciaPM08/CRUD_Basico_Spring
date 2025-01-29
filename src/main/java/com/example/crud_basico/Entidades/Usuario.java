@@ -1,12 +1,16 @@
 package com.example.crud_basico.Entidades;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -15,7 +19,6 @@ import java.util.Set;
 @Entity
 @Table(name = "usuario")
 public class Usuario {
-    //Variables
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -23,6 +26,7 @@ public class Usuario {
 
     @Size(max = 15)
     @NotNull
+    @Pattern(regexp = "^[0-9]{8}[A-Z]$", message = "El DNI no es valido")
     @Column(name = "dni", nullable = false, length = 15)
     private String dni;
 
@@ -33,70 +37,27 @@ public class Usuario {
 
     @Size(max = 100)
     @NotNull
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$", message = "El email no es válido.")
     @Column(name = "email", nullable = false, length = 100)
     private String email;
 
     @Size(max = 255)
     @NotNull
+    @Pattern(regexp = "^[a-zA-Z0-9]{4,12}$", message = "La contraseña debe tener entre 4 y 12 caracteres alfanuméricos.")
     @Column(name = "password", nullable = false)
     private String password;
 
+    @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipo;
 
-    @Column(name = "penalizacionHasta")
-    private Date penalizacionHasta;
+    @ColumnDefault("NULL")
+    @Column(name = "penalizacion_hasta")
+    private Date penalizacion_hasta;
 
-    @Getter
-    @OneToMany(mappedBy = "usuario")
-    private Set<Prestamo> prestamos = new LinkedHashSet<>();
-
-    //Getters y setters
-    public @Size(max = 15) @NotNull String getDni() {
-        return dni;
-    }
-
-    public void setDni(@Size(max = 15) @NotNull String dni) {
-        this.dni = dni;
-    }
-
-    public @Size(max = 100) @NotNull String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(@Size(max = 100) @NotNull String nombre) {
-        this.nombre = nombre;
-    }
-
-    public @Size(max = 100) @NotNull String getEmail() {
-        return email;
-    }
-
-    public void setEmail(@Size(max = 100) @NotNull String email) {
-        this.email = email;
-    }
-
-    public @Size(max = 255) @NotNull String getPassword() {
-        return password;
-    }
-
-    public void setPassword(@Size(max = 255) @NotNull String password) {
-        this.password = password;
-    }
-
-    public @NotNull TipoUsuario getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(@NotNull TipoUsuario tipo) {
-        this.tipo = tipo;
-    }
-
-    //Tipo enum para estableccer el tipo del Usuario
-    public enum TipoUsuario {
-        normal, administardor;
+    public enum TipoUsuario{
+        normal, administrador;
     }
 }
-
 

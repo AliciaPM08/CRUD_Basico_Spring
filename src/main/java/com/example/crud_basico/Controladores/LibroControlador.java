@@ -80,7 +80,7 @@ public class LibroControlador {
 
     //PUT --> UPDATE
     @PutMapping("/{isbn}")
-    public ResponseEntity<Libro> updateLibro(@RequestBody Libro libro, @PathVariable String isbn){
+    public ResponseEntity<Libro> updateLibro(@Valid @RequestBody Libro libro, @PathVariable String isbn){
         Libro libroPersistido = repositorioLibros.save(libro);
         return ResponseEntity.ok().body(libroPersistido);
     }

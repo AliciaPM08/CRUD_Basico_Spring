@@ -2,6 +2,9 @@ package com.example.crud_basico.Entidades;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -16,13 +19,14 @@ import java.util.Set;
 @Entity
 @Table(name = "ejemplar")
 public class Ejemplar {
-    //Variables
     @Id
+    @Size(max = 11)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
     @NotNull
+    @Size(max = 20)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "isbn", nullable = false)
@@ -34,19 +38,23 @@ public class Ejemplar {
     @Enumerated(EnumType.STRING)
     private EstadoEjemplar estado;
 
-    @OneToMany(mappedBy = "ejemplar")
-    private Set<Prestamo> prestamos = new LinkedHashSet<>();
-
-    //Getters y setters
-    public @NotNull Libro getIsbn() {
-        return isbn;
+    public enum EstadoEjemplar{
+    Disponible, Dañado, Prestado;
     }
 
-    public void setIsbn(@NotNull Libro isbn) {
+    public Ejemplar(Integer id, Libro isbn) {
+        this.id = id;
         this.isbn = isbn;
     }
 
-    public enum EstadoEjemplar{
-        DISPONIBLE, DAÑADO;
+    public Ejemplar() {
+    }
+
+    @Override
+    public String toString() {
+        return "Ejemplar{" +
+                "id=" + id +
+                ", isbn=" + isbn +
+                '}';
     }
 }

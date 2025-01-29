@@ -71,7 +71,7 @@ public class EjemplarControlador {
 
     //PUT --> UPDATE
     @PutMapping("/{id}")
-    public ResponseEntity<Ejemplar> updateEjemplar(@RequestBody Ejemplar ejemplar, @PathVariable Integer id){
+    public ResponseEntity<Ejemplar> updateEjemplar(@Valid @RequestBody Ejemplar ejemplar, @PathVariable Integer id){
         Ejemplar ejemplarPersistido = repositorioEjemplares.save(ejemplar);
         return ResponseEntity.ok().body(ejemplarPersistido);
     }
